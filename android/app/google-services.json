@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279501522890",
+    "project_id": "wirehouse-9c09c",
+    "storage_bucket": "wirehouse-9c09c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279501522890:android:d71f1f44abe6fe67f73133",
+        "android_client_info": {
+          "package_name": "uz.otabek.wirehouse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASDntPSf50y9_F1JuRvqxUH-vRvcZq65A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
