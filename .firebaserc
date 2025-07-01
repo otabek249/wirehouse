@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "wirehouse": "wirehouse-9c09c",
+    "default": "wirehouse-9c09c"
+  },
+  "targets": {},
+  "etags": {}
+}
