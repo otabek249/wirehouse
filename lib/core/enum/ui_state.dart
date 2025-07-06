@@ -5,4 +5,5 @@ enum UIState{
   success,
   error,
   initial,
+  empty
 }

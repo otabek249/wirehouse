@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:main/core/colors/colors_screen.dart';
+import 'package:main/ui/main/bloc/main_bloc.dart';
+import 'product_detail_screen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
+  _getData() {
+    context.read<MainBloc>().add(GetProductsEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,29 +28,26 @@ class MainScreen extends StatelessWidget {
     final isTablet = screenWidth >= 600 && screenWidth < 1024;
     final isDesktop = screenWidth >= 1024;
 
-
     return Scaffold(
       body: Container(
         color: AppColors.background,
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-             Padding(
-               padding: const EdgeInsets.all(12),
-               child: TextField(
-
-                 decoration: InputDecoration(
-                   labelText: 'Qidirish',
-                   hintText: 'Matn kiriting...',
-                   prefixIcon: const Icon(Icons.search),
-                   border: OutlineInputBorder(
-                     borderRadius: BorderRadius.circular(12),
-                   ),
-                 ),
-               ),
-             ),
+            SizedBox(
+              height: 48,
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'Qidirish',
+                  hintText: 'Matn kiriting...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
-            const SizedBox(height: 24),
             const Text(
               "Latest Arrived Products",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -46,6 +61,9 @@ class MainScreen extends StatelessWidget {
                 } else if (isTablet) {
                   crossAxisCount = 2;
                 }
+                final productList =
+                    context.watch<MainBloc>().state.productList ?? [];
+
                 return GridView.count(
                   crossAxisCount: crossAxisCount,
                   shrinkWrap: true,
@@ -53,44 +71,23 @@ class MainScreen extends StatelessWidget {
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                   childAspectRatio: 3,
-                  children: [
-                    _buildProductCard(
-                      color: AppColors.cardBackground,
-                      image: 'https://via.placeholder.com/150', // Haqiqiy image URL
-                      name: "Premium Cotton T-Shirt",
-                      units: 42,
-                      location: "Warehouse A-12",
-                      colors: [Colors.red, Colors.green, Colors.blue],
-                      colorCounts: [10, 5, 8],
-                    ),
-                    _buildProductCard(
-                      color: AppColors.cardBackground,
-                      image: 'https://via.placeholder.com/150',
-                      name: "Classic Denim Jeans",
-                      units: 35,
-                      location: "Warehouse B-03",
-                      colors: [Colors.blue, Colors.purple, Colors.grey],
-                      colorCounts: [15, 12, 8],
-                    ),
-                    _buildProductCard(
-                      color: AppColors.cardBackground,
-                      image: 'https://via.placeholder.com/150', // Haqiqiy image URL
-                      name: "Premium Cotton T-Shirt",
-                      units: 42,
-                      location: "Warehouse A-12",
-                      colors: [Colors.red, Colors.green, Colors.blue],
-                      colorCounts: [10, 5, 8],
-                    ),
-                    _buildProductCard(
-                      color: AppColors.cardBackground,
-                      image: 'https://via.placeholder.com/150', // Haqiqiy image URL
-                      name: "Premium Cotton T-Shirt",
-                      units: 42,
-                      location: "Warehouse A-12",
-                      colors: [Colors.red, Colors.green, Colors.blue],
-                      colorCounts: [10, 5, 8],
-                    ),
-                  ],
+                  children:
+                      productList.map((product) {
+                        return InkWell(
+                          onTap: () {
+
+                          },
+                          child: _buildProductCard(
+                            color: AppColors.cardBackground,
+                            image: "",
+                            name: product.name ?? "",
+                            units: product.totalCount,
+                            location: product.warehouse ?? "",
+                            colors: [],
+                            colorCounts: [],
+                          ),
+                        );
+                      }).toList(),
                 );
               },
             ),
@@ -100,7 +97,12 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(Color color, IconData icon, String label, String count) {
+  Widget _buildStatCard(
+    Color color,
+    IconData icon,
+    String label,
+    String count,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
@@ -124,7 +126,10 @@ class MainScreen extends StatelessWidget {
             children: [
               Text(
                 count,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -137,7 +142,6 @@ class MainScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildProductCard({
     required Color color,
@@ -180,13 +184,14 @@ class MainScreen extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: AppColors.textColor),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textColor,
+                  ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  "$units units",
-                  style: const TextStyle(fontSize: 14),
-                ),
+                Text("$units units", style: const TextStyle(fontSize: 14)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
@@ -225,6 +230,5 @@ class MainScreen extends StatelessWidget {
         ],
       ),
     );
-
   }
 }
