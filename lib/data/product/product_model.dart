@@ -8,7 +8,7 @@ class ProductModel {
   final String warehouse;
   final String? imageUrl;
   final List<Variant> variants;
-  final List<dynamic> images;
+  final List<dynamic?> images;
   final int totalCount;
 
   ProductModel({
