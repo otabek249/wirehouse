@@ -84,7 +84,7 @@ class _MainScreenState extends State<MainScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 3,
+                  childAspectRatio:10/4,
                   children:
                       productList.map((product) {
                         return InkWell(

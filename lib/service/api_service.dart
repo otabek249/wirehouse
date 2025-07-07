@@ -10,7 +10,7 @@ class ApiService {
   ApiService._internal() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:8081/api/',
+        baseUrl: 'https://ago-ties-checking-gratuit.trycloudflare.com/api/',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
