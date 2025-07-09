@@ -31,7 +31,8 @@ jobs:
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "build/web/*"
-          target: "/var/www/otash08.uz/build"
+          target: "/var/www/otash08.uz"
+
 
       - name: Reload Nginx
         uses: appleboy/ssh-action@v1.0.3
