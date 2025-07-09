@@ -78,69 +78,40 @@ class _MainScreenState extends State<MainScreen> {
                 final productList =
                     context.watch<MainBloc>().state.productList ?? [];
 
-                final screenWidth = MediaQuery.of(context).size.width;
+                return GridView.count(
+                  crossAxisCount: crossAxisCount,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 10/4,
+                  children:
+                      productList.map((product) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailScreen(
+                                  product: product,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ProductCard(
+                            name: product.name ?? "",
+                            code: product.code ?? "",
+                            price: product.price ?? 0,
+                            warehouse: product.warehouse ?? "",
+                            imageUrl: product.imageUrl,
+                            images: product.images,
+                            variants: product.variants??[],
+                            totalCount: product.totalCount ?? 0,
+                          ),
 
-                if (screenWidth < 600) {
-
-                  return ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: productList.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final product = productList[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ProductDetailScreen(product: product),
-                            ),
-                          );
-                        },
-                        child: ProductCard(
-                          name: product.name ?? "",
-                          code: product.code ?? "",
-                          price: product.price ?? 0,
-                          warehouse: product.warehouse ?? "",
-                          imageUrl: product.imageUrl,
-                          images: product.images,
-                          variants: product.variants ?? [],
-                          totalCount: product.totalCount ?? 0,
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return GridView.count(
-                    crossAxisCount: screenWidth > 1024 ? 3 : 2,
-                    padding: const EdgeInsets.all(16),
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 10 / 4,
-                    children: productList.map((product) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ProductDetailScreen(product: product),
-                            ),
-                          );
-                        },
-                        child: ProductCard(
-                          name: product.name ?? "",
-                          code: product.code ?? "",
-                          price: product.price ?? 0,
-                          warehouse: product.warehouse ?? "",
-                          imageUrl: product.imageUrl,
-                          images: product.images,
-                          variants: product.variants ?? [],
-                          totalCount: product.totalCount ?? 0,
-                        ),
-                      );
-                    }).toList(),
-                  );
-                }
+                        );
+                      }).toList(),
+                );
               },
             ),
           ],
