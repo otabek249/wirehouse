@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "build/web/*"
+          source: "build/web/"
           target: "/var/www/otash08.uz"
 
       - name: Reload Nginx
