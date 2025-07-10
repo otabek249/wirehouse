@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:main/core/colors/colors_screen.dart';
 
+import '../../../data/product/product_model.dart';
 import '../../../data/product/varinat.dart';
 
 class ProductCard extends StatelessWidget {
@@ -10,8 +11,8 @@ class ProductCard extends StatelessWidget {
   final double price;
   final String warehouse;
   final String? imageUrl;
-  final List<dynamic?> images;
-  final List<Variant> variants;
+  final List<Images?> images;
+  final List<Variants> variants;
   final int totalCount;
 
   const ProductCard({
@@ -78,7 +79,7 @@ class ProductCard extends StatelessWidget {
                           items:
                               images.map((imgUrl) {
                                 return Image.network(
-                                  imgUrl ?? "",
+                                  "https://otash08.uz${imgUrl?.imageUrl ?? ""}",
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -95,7 +96,7 @@ class ProductCard extends StatelessWidget {
                         )
                         : (imageUrl != null
                             ? Image.network(
-                              imageUrl!,
+                              "https://otash08.uz$imageUrl"!,
                               width: 100,
                               height: 100,
                               fit: BoxFit.cover,
