@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:main/core/colors/colors_screen.dart';
 import 'package:main/data/product/product_model.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -9,6 +10,7 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: Text(product.name)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

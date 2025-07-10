@@ -75,45 +75,76 @@ class _MainScreenState extends State<MainScreen> {
                 } else if (isTablet) {
                   crossAxisCount = 2;
                 }
-                final productList =
-                    context.watch<MainBloc>().state.productList ?? [];
 
-                return GridView.count(
-                  crossAxisCount: crossAxisCount,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 10/4,
-                  children:
-                      productList.map((product) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetailScreen(
-                                  product: product,
-                                ),
-                              ),
-                            );
-                          },
-                          child: ProductCard(
-                            name: product.name ?? "",
-                            code: product.code ?? "",
-                            price: product.price ?? 0,
-                            warehouse: product.warehouse ?? "",
-                            imageUrl: product.imageUrl,
-                            images: product.images,
-                            variants: product.variants??[],
-                            totalCount: product.totalCount ?? 0,
-                          ),
+                final productList = context.watch<MainBloc>().state.productList ?? [];
 
-                        );
-                      }).toList(),
-                );
+                if (!isTablet && !isDesktop) {
+                  // Telefon uchun ListView
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: productList.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final product = productList[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailScreen(product: product),
+                            ),
+                          );
+                        },
+                        child: ProductCard(
+                          name: product.name ?? "",
+                          code: product.code ?? "",
+                          price: product.price ?? 0,
+                          warehouse: product.warehouse ?? "",
+                          imageUrl: product.imageUrl,
+                          images: product.images,
+                          variants: product.variants ?? [],
+                          totalCount: product.totalCount ?? 0,
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  // Tablet va desktop uchun GridView
+                  return GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 10 / 4,
+                    children: productList.map((product) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetailScreen(product: product),
+                            ),
+                          );
+                        },
+                        child: ProductCard(
+                          name: product.name ?? "",
+                          code: product.code ?? "",
+                          price: product.price ?? 0,
+                          warehouse: product.warehouse ?? "",
+                          imageUrl: product.imageUrl,
+                          images: product.images,
+                          variants: product.variants ?? [],
+                          totalCount: product.totalCount ?? 0,
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
               },
             ),
+
           ],
         ),
       ),
