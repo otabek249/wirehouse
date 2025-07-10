@@ -25,7 +25,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     final isTablet = screenWidth >= 600 && screenWidth < 1024;
     final isDesktop = screenWidth >= 1024;
 
@@ -33,130 +36,136 @@ class _MainScreenState extends State<MainScreen> {
       body: Container(
         color: AppColors.background,
         padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 48,
-              child:TextField(
-                decoration: InputDecoration(
-                  labelText: 'Qidirish',
-                  label: null,
-                  labelStyle: TextStyle(
-                    color: AppColors.textColor, // Label rangi
-                    fontSize: 16, // Font o‘lchami
-                  ),
-                  hintText: 'Matn kiriting...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: AppColors.black, // Aktiv bo‘lganda border rangi
-                      width: 2,           // Qalinligi
+        child: BlocConsumer<MainBloc, MainState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return ListView(
+              children: [
+                SizedBox(
+                  height: 48,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Qidirish',
+                      label: null,
+                      labelStyle: TextStyle(
+                        color: AppColors.textColor, // Label rangi
+                        fontSize: 16, // Font o‘lchami
+                      ),
+                      hintText: 'Matn kiriting...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppColors.black,
+                          // Aktiv bo‘lganda border rangi
+                          width: 2, // Qalinligi
+                        ),
+                      ),
                     ),
                   ),
+
                 ),
-              ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Latest Arrived Products",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = 1;
+                    if (isDesktop) {
+                      crossAxisCount = 3;
+                    } else if (isTablet) {
+                      crossAxisCount = 2;
+                    }
+                    final productList= state.productList??[];
 
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "Latest Arrived Products",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                int crossAxisCount = 1;
-                if (isDesktop) {
-                  crossAxisCount = 3;
-                } else if (isTablet) {
-                  crossAxisCount = 2;
-                }
-
-                final productList = context.watch<MainBloc>().state.productList ?? [];
-
-                if (!isTablet && !isDesktop) {
-                  // Telefon uchun ListView
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: productList.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 16),
-                    itemBuilder: (context, index) {
-                      final product = productList[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailScreen(product: product),
+                    if (!isTablet && !isDesktop) {
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: productList.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 16),
+                        itemBuilder: (context, index) {
+                          final product = productList[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDetailScreen(product: product),
+                                ),
+                              );
+                            },
+                            child: ProductCard(
+                              name: product.name ?? "",
+                              code: product.code ?? "",
+                              price: product.price ?? 0,
+                              warehouse: product.warehouse ?? "",
+                              imageUrl: product.imageUrl,
+                              images: product.images,
+                              variants: product.variants ?? [],
+                              totalCount: product.totalCount ?? 0,
                             ),
                           );
                         },
-                        child: ProductCard(
-                          name: product.name ?? "",
-                          code: product.code ?? "",
-                          price: product.price ?? 0,
-                          warehouse: product.warehouse ?? "",
-                          imageUrl: product.imageUrl,
-                          images: product.images,
-                          variants: product.variants ?? [],
-                          totalCount: product.totalCount ?? 0,
-                        ),
                       );
-                    },
-                  );
-                } else {
-                  // Tablet va desktop uchun GridView
-                  return GridView.count(
-                    crossAxisCount: crossAxisCount,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 10 / 4,
-                    children: productList.map((product) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductDetailScreen(product: product),
+                    } else {
+                      return GridView.count(
+                        crossAxisCount: crossAxisCount,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 10 / 4,
+                        children: productList.map((product) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDetailScreen(product: product),
+                                ),
+                              );
+                            },
+                            child: ProductCard(
+                              name: product.name ?? "",
+                              code: product.code ?? "",
+                              price: product.price ?? 0,
+                              warehouse: product.warehouse ?? "",
+                              imageUrl: product.imageUrl,
+                              images: product.images,
+                              variants: product.variants ?? [],
+                              totalCount: product.totalCount ?? 0,
                             ),
                           );
-                        },
-                        child: ProductCard(
-                          name: product.name ?? "",
-                          code: product.code ?? "",
-                          price: product.price ?? 0,
-                          warehouse: product.warehouse ?? "",
-                          imageUrl: product.imageUrl,
-                          images: product.images,
-                          variants: product.variants ?? [],
-                          totalCount: product.totalCount ?? 0,
-                        ),
+                        }).toList(),
                       );
-                    }).toList(),
-                  );
-                }
-              },
-            ),
+                    }
+                  },
+                ),
 
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildStatCard(
-    Color color,
-    IconData icon,
-    String label,
-    String count,
-  ) {
+  Widget _buildStatCard(Color color,
+      IconData icon,
+      String label,
+      String count,) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
